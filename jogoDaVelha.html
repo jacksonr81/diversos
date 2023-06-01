@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!--
+  Autor: Jackson Rosá
+  https://www.linkedin.com/in/jackson-developer
+  https://github.com/jacksonr81
+  Versão: 1.0
+  Data: 01/06/2023
+-->
+<html>
+<head>
+  <style>
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 2px;
+    }
+
+    .square {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      border: 1px solid black;
+      cursor: pointer;
+      font-size: 48px;
+    }
+
+    .square:hover {
+      background-color: #eee;
+    }
+
+    .message {
+      margin-top: 20px;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="board">
+    <div class="square" id="0"></div>
+    <div class="square" id="1"></div>
+    <div class="square" id="2"></div>
+    <div class="square" id="3"></div>
+    <div class="square" id="4"></div>
+    <div class="square" id="5"></div>
+    <div class="square" id="6"></div>
+    <div class="square" id="7"></div>
+    <div class="square" id="8"></div>
+  </div>
+  <div class="message"></div>
+
+  <script>
+    var board = document.querySelector('.board');
+    var squares = document.querySelectorAll('.square');
+    var message = document.querySelector('.message');
+
+    var currentPlayer = 'X';
+    var gameOver = false;
+    var moves = 0;
+
+    // Adiciona os eventos de clique nas casas
+    squares.forEach(function(square) {
+      square.addEventListener('click', function() {
+        if (!gameOver && !square.innerHTML) {
+          square.innerHTML = currentPlayer;
+          square.classList.add(currentPlayer);
+
+          moves++;
+          if (checkWin(currentPlayer)) {
+            gameOver = true;
+            message.innerHTML = currentPlayer + ' venceu!';
+          } else if (moves === 9) {
+            gameOver = true;
+            message.innerHTML = 'Empate!';
+          } else {
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+          }
+        }
+      });
+    });
+
+    // Verifica se um jogador venceu
+    function checkWin(player) {
+      var winningCombinations = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // Linhas
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // Colunas
+        [0, 4, 8], [2, 4, 6] // Diagonais
+      ];
+
+      return winningCombinations.some(function(combination) {
+        return combination.every(function(squareIndex) {
+          return squares[squareIndex].classList.contains(player);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
